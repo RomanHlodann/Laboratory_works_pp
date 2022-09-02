@@ -1,10 +1,12 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class LB {
+//Task: 6.Визначити, які числа серед перших N чисел Люка є простими.
+
+public class Learn {
     /** Main method
-     *  Creates an array of 3 objects, and fill them with parametrs from command line or keyboard
-     *  Calling methods, such as {@link numbLuke#findCount()} and {@link numbLuke#getValue()} ()}
+     *  Creates an array of objects, and fill them with parametrs from command line or keyboard
+     *  Calling methods, such as {@link numbLuke#findCount()} and {@link numbLuke#getValue()} }
      *
      */
     public static void main(String[] args) {
@@ -12,17 +14,22 @@ public class LB {
         int limit = 100, num = 0;
         numbLuke[] arr = new numbLuke[limit]; //creating an array of objects
         if (args.length != 0){            //checking if in command line is availble parametrs
-            for(int i = 0; i < limit; i++){   //filling objects with some values
+            int i = 0;
+            while( i < limit ){   //filling objects with some values
                 num = Integer.parseInt(args[i].trim());
                 if (num > 0) {
                     arr[i] = new numbLuke(Integer.parseInt(args[i].trim()));
                 }
                 if(num == 0){break;}
+                if(num < 0) {continue;}
+                i++;
             }
+            limit = i;
         }
         else {                             //if command line isn`t availble filling from keyboard
             Scanner in = new Scanner(System.in);
-            for(int i = 0; i < limit; i++) {
+            int i = 0;
+            while(i < limit) {
                 System.out.print("Enter N first numbers (end with 0):");
                 num = in.nextInt();
                 if(num < 0){
@@ -33,11 +40,11 @@ public class LB {
                     break;
                 }
                 arr[i] = new numbLuke(num);
+                i++;
             }
+            limit = i;
         }
-        //numbLuke man = new numbLuke(3);
-        //System.out.println("In first " + man.getNumb() + " numbers, prime:" );
-        for(int i = 0; i < 3; i++) {            //calling methods from class numbLuke and output the results to console
+        for(int i = 0; i < limit; i++) {            //calling methods from class numbLuke and output the results to console
             System.out.println("In first " + arr[i].getNumb() + " numbers, prime:" + arr[i].findCount());
             System.out.println(arr[i].getNumb() + " numb of Luke numbers: " + arr[i].getValue());
         }
@@ -52,8 +59,8 @@ public class LB {
         private int count, id, value;//initializing required variable, "count" for prime numbers, "numb"-N,
                                           //and "luke" is value of N numb
 
-        static ArrayList<Integer> listOfLukas = new ArrayList<Integer>();
-        static ArrayList<Integer> listOfPrimes = new ArrayList<Integer>();
+        static ArrayList<Integer> listOfLukas = new ArrayList();
+        static ArrayList<Integer> listOfPrimes = new ArrayList();
         static int prev = 1, curr = 3, last;
         /**
          * Constructor without parameters
@@ -61,6 +68,7 @@ public class LB {
          * {@link #creatingArrayOfLuke()}
          */
         numbLuke() {                      //constructor without parameters
+            System.out.print("Enter N first numbers (end with 0):");
             Scanner in = new Scanner(System.in);
             id = in.nextInt();
             creatingArrayOfLuke();
@@ -98,7 +106,7 @@ public class LB {
         void findPrime(int num) {          //checking if the numb is prime
             if (num % 2 == 0)             //in order to reduce the number of passes in for
                 return;
-            for (int i = 3; i < num / 2; i += 2) {
+            for (int i = 3; i < Math.sqrt(num); i += 2) {
                 if (num % i == 0)
                     return;
             }
@@ -121,12 +129,12 @@ public class LB {
                 }
                 return count;
             }
-
-            while(++last < id){                       // while the id of last numb that entered in method findPrime
+            while(last < id){                       // while the id of last numb that entered in method findPrime
                 findPrime(listOfLukas.get(last));     // is smaller than curr id, calling a method
+                last++;
             }
             count = listOfPrimes.size();
-            last = id - 1;
+            //last = id - 1;
             return count;
         }
 
@@ -139,7 +147,7 @@ public class LB {
                 listOfLukas.add(curr);
                 listOfPrimes.add(prev);
                 listOfPrimes.add(curr);
-                last = 1;
+                last = 2;                   // using variable for
             }
             if (listOfLukas.size() < id){
                 for(int i = listOfLukas.size(); i < id; i++){
