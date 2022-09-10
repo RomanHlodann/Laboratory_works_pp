@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 //Task: 6.Визначити, які числа серед перших N чисел Люка є простими.
@@ -7,47 +8,65 @@ public class Learn {
     /** Main method
      *  Creates an array of objects, and fill them with parametrs from command line or keyboard
      *  Calling methods, such as {@link numbLuke#findCount()} and {@link numbLuke#getValue()} }
-     *
      */
     public static void main(String[] args) {
         System.out.println("\n\tProgram that searching how many prime numbers in first N Luke row\n");
-        int limit = 100, num = 0;
-        numbLuke[] arr = new numbLuke[limit]; //creating an array of objects
-        if (args.length != 0){            //checking if in command line is availble parametrs
-            int i = 0;
-            while( i < limit ){   //filling objects with some values
-                num = Integer.parseInt(args[i].trim());
-                if (num > 0) {
-                    arr[i] = new numbLuke(Integer.parseInt(args[i].trim()));
-                }
-                if(num == 0){break;}
-                if(num < 0) {continue;}
-                i++;
-            }
-            limit = i;
+        numbLuke[] arr;
+        if(args.length != 0){
+            arr = inputConsole(args);
         }
-        else {                             //if command line isn`t availble filling from keyboard
-            Scanner in = new Scanner(System.in);
-            int i = 0;
-            while(i < limit) {
-                System.out.print("Enter N first numbers (end with 0):");
-                num = in.nextInt();
-                if(num < 0){
-                    System.out.println("Error! You wrote a wrong number. Try again!");
-                    continue;
-                }
-                if(num == 0){
-                    break;
-                }
-                arr[i] = new numbLuke(num);
-                i++;
-            }
-            limit = i;
+        else {
+            arr = inputKeyboard();
         }
-        for(int i = 0; i < limit; i++) {            //calling methods from class numbLuke and output the results to console
+        for(int i = 0; i < arr.length; i++) {            //calling methods from class numbLuke and output the results to console
             System.out.println("In first " + arr[i].getNumb() + " numbers, prime:" + arr[i].findCount());
             System.out.println(arr[i].getNumb() + " numb of Luke numbers: " + arr[i].getValue());
         }
+    }
+
+    /**
+     * Function that creates numbLuke objects with paramaters of console
+     * @param args - values from console
+     * @return copy of all created objects
+     */
+    private static numbLuke[] inputConsole(String[] args){
+        int limit = 100, num = 0;
+        numbLuke[] arr = new numbLuke[limit];
+        int i = 0;
+        while( i < limit ){   //filling objects with some values
+            num = Integer.parseInt(args[i].trim());
+            if (num > 0) {
+                arr[i] = new numbLuke(Integer.parseInt(args[i].trim()));
+            }
+            if(num == 0){break;}
+            if(num < 0) {continue;}
+            i++;
+        }
+        return Arrays.copyOf(arr, i);
+    }
+    /**
+     * Function that creates numbLuke objects with inputting from keyboard
+     * @return copy of all created objects
+     */
+    private static numbLuke[] inputKeyboard(){
+        int limit = 100, num = 0;
+        numbLuke[] arr = new numbLuke[limit];
+        Scanner in = new Scanner(System.in);
+        int i = 0;
+        while(i < limit) {  //filling objects with some values
+            System.out.print("Enter N first numbers (end with 0):");
+            num = in.nextInt();
+            if(num < 0){
+                System.out.println("Error! You wrote a wrong number. Try again!");
+                continue;
+            }
+            if(num == 0){
+                break;
+            }
+            arr[i] = new numbLuke(num);
+            i++;
+        }
+        return Arrays.copyOf(arr, i);
     }
 }
 
@@ -118,9 +137,8 @@ public class Learn {
          * Method that finding how many prime numbers in first N Luke numbers
          */
         int findCount() {
-            if (id == 1 || id == 2) {
-                count = id;
-                return count;
+            if (id <= 2) {
+                return id;
             }
             if (listOfPrimes.get(listOfPrimes.size() - 1) > value) { // if last numb in list is greater
                 count = listOfPrimes.size();
@@ -134,7 +152,6 @@ public class Learn {
                 last++;
             }
             count = listOfPrimes.size();
-            //last = id - 1;
             return count;
         }
 
